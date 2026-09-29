@@ -1,0 +1,6 @@
+/target
+/aur/*/*.tar.gz
+/aur/*/*.traineddata
+/aur/*/*.pkg.tar.zst
+/aur/*/pkg
+/aur/*/src

@@ -1,0 +1,44 @@
+# Maintainer: Your Name <you@example.com>
+pkgname=socr
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Select a screen region, OCR it and copy the text to the clipboard (Wayland & X11)"
+arch=('x86_64' 'aarch64')
+url="https://github.com/VickyDev810/socr"
+license=('MIT')
+depends=('gcc-libs' 'glibc' 'tesseract' 'wl-clipboard' 'xclip' 'grim' 'slurp' 'tesseract-data-eng')
+conflicts=('socr-lite')
+makedepends=('cargo')
+optdepends=(
+  'maim: region capture on X11 window managers (i3, Openbox, bspwm...)'
+  'tesseract-data-deu: German OCR, and any other tesseract-data-* language'
+)
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  cargo build --frozen --release
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo test --frozen --release
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm755 target/release/socr "$pkgdir/usr/bin/socr"
+  install -Dm644 socr.desktop "$pkgdir/usr/share/applications/socr.desktop"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+}

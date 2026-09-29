@@ -1,0 +1,52 @@
+# Maintainer: Your Name <you@example.com>
+pkgname=socr-lite
+_name=socr
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Select a screen region, OCR it and copy the text to the clipboard (Wayland & X11) - lightweight, bundles the fast English model"
+arch=('x86_64' 'aarch64')
+url="https://github.com/VickyDev810/socr"
+license=('MIT' 'Apache-2.0')  # Apache-2.0: tessdata_fast model
+depends=('gcc-libs' 'glibc' 'tesseract' 'wl-clipboard' 'xclip' 'grim' 'slurp')
+# tesseract requires some 'tessdata' provider; the bundled fast English model
+# satisfies that so pacman doesn't pull in (or prompt for) a full language pack.
+provides=('socr' 'tessdata')
+conflicts=('socr')
+makedepends=('cargo')
+optdepends=(
+  'maim: region capture on X11 window managers (i3, Openbox, bspwm...)'
+  'tesseract-data-deu: German OCR, and any other tesseract-data-* language'
+)
+_tessdata=4.1.0
+source=("$_name-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
+        "eng-fast-$_tessdata.traineddata::https://github.com/tesseract-ocr/tessdata_fast/raw/$_tessdata/eng.traineddata")
+sha256sums=('SKIP'
+            '7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2')
+
+prepare() {
+  cd "$_name-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+  cd "$_name-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  cargo build --frozen --release
+}
+
+check() {
+  cd "$_name-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo test --frozen --release
+}
+
+package() {
+  cd "$_name-$pkgver"
+  install -Dm755 target/release/socr "$pkgdir/usr/bin/socr"
+  install -Dm644 "$srcdir/eng-fast-$_tessdata.traineddata" "$pkgdir/usr/share/socr/tessdata/eng.traineddata"
+  install -Dm644 socr.desktop "$pkgdir/usr/share/applications/socr.desktop"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+}

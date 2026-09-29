@@ -1,0 +1,16 @@
+[package]
+name = "socr"
+version = "0.1.0"
+edition = "2021"
+description = "Select a screen region, OCR it, copy the text to the clipboard. Works on Wayland and X11."
+license = "MIT"
+
+[dependencies]
+png = "0.18"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

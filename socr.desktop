@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=socr
+GenericName=Screen OCR
+Comment=Select a screen region and copy its text
+Exec=socr
+Icon=edit-copy
+Terminal=false
+Categories=Utility;
+Keywords=ocr;text;screenshot;clipboard;
