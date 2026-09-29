@@ -20,7 +20,7 @@ optdepends=(
 _tessdata=4.1.0
 source=("$_name-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
         "eng-fast-$_tessdata.traineddata::https://github.com/tesseract-ocr/tessdata_fast/raw/$_tessdata/eng.traineddata")
-sha256sums=('SKIP'
+sha256sums=('68b96d9f3afde1301a1b4d56671a7baec00bd2cad1006c04c09d24c0dab66afb'
             '7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2')
 
 prepare() {

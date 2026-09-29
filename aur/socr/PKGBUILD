@@ -14,7 +14,7 @@ optdepends=(
   'tesseract-data-deu: German OCR, and any other tesseract-data-* language'
 )
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('SKIP')
+sha256sums=('68b96d9f3afde1301a1b4d56671a7baec00bd2cad1006c04c09d24c0dab66afb')
 
 prepare() {
   cd "$pkgname-$pkgver"
